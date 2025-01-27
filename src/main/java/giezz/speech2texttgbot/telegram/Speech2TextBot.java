@@ -39,10 +39,16 @@ public class Speech2TextBot extends TelegramLongPollingBot {
             return;
         }
         Path path = Path.of("voice.ogg");
-        downloadVoiceFile(update.getMessage().getVoice(), path);
-        String transcription = deepgramService.getTranscription(path);
-        deleteFile(path);
-        sendText(update.getMessage().getFrom().getId(), transcription);
+        try {
+            downloadVoiceFile(update.getMessage().getVoice(), path);
+            String transcription = deepgramService.getTranscription(path);
+            sendText(update.getMessage().getFrom().getId(), transcription);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            sendText(update.getMessage().getFrom().getId(), "Произошла ошибка, попробуйте еще раз");
+        } finally {
+            deleteFile(path);
+        }
     }
 
     private void downloadVoiceFile(Voice voice, Path localPath) {
