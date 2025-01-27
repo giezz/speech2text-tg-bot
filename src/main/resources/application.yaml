@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: speech2text-tg-bot
+telegram:
+  bot:
+    username: Speech To Text
+    token: ${TG_BOT_TOKEN}
+
+api:
+  deepgram:
+    url: https://api.deepgram.com/v1/listen
+    token: ${DEEPGRAM_TOKEN}
+  telegram:
+    url: https://api.telegram.org
