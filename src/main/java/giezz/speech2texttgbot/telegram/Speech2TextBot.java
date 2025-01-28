@@ -35,10 +35,10 @@ public class Speech2TextBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(final Update update) {
-        val message = update.getMessage();
-        if (!update.hasMessage() || !message.hasVoice()) {
+        if (!update.hasMessage() || !update.getMessage().hasVoice()) {
             return;
         }
+        val message = update.getMessage();
         val voice = message.getVoice();
         log.debug("Voice: {}", voice);
         sendText(
