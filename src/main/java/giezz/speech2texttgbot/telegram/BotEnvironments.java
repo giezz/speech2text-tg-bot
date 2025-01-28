@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 @Getter
 public class BotEnvironments {
     @Value("${telegram.bot.username}")
-    private String botUsername;
+    String botUsername;
+
     @Value("${telegram.bot.token}")
-    private String botToken;
+    String botToken;
 
 }

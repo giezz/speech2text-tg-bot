@@ -2,6 +2,7 @@ package giezz.speech2texttgbot.config;
 
 import giezz.speech2texttgbot.telegram.Speech2TextBot;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,16 +15,16 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Slf4j
 public class TelegramConfig {
     @Bean
-    public BotSession speech2TextBotSession(Speech2TextBot bot) {
-        String botUsername = bot.getBotUsername();
-        log.info("Initializing bot '{}'", botUsername);
+    public BotSession speech2TextBotSession(final Speech2TextBot bot) {
+        val botUsername = bot.getBotUsername();
+        log.info("Инициализация бота '{}'", botUsername);
         try {
-            TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            BotSession botSession = telegramBotsApi.registerBot(bot);
-            log.info("Bot '{}' is ready", botUsername);
+            val telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
+            val botSession = telegramBotsApi.registerBot(bot);
+            log.info("Бот '{}' готов", botUsername);
             return botSession;
-        } catch (TelegramApiException e) {
-            throw new BeanCreationException("Failed to create the bot", e);
+        } catch (TelegramApiException thrown) {
+            throw new BeanCreationException("Ошибка при инициализации бота", thrown);
         }
     }
 

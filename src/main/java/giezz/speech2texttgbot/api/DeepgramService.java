@@ -1,46 +1,44 @@
 package giezz.speech2texttgbot.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true)
 @Slf4j
 public class DeepgramService {
-    private final ObjectMapper objectMapper;
-    private final DeepgramClient deepgramClient;
+    ObjectMapper objectMapper;
+    DeepgramClient deepgramClient;
 
-    public String getTranscription(Path path) {
-        String response = deepgramClient.sendAudioRequest(path);
-        response = extractTranscription(response);
-        log.info("received transcription: {}", response);
-        if (response.isBlank()) {
-            response = "Не удалось конвертировать в текст";
+    public String getTranscription(final Path path) {
+        String transcription = extractTranscriptionFromResponse(deepgramClient.sendAudioRequest(path));
+        log.debug("Получена транскрипция: {}", transcription);
+        if (transcription.isBlank()) {
+            transcription = "Не удалось конвертировать в текст";
         }
-
-        return response;
+        return transcription;
     }
 
-    private String extractTranscription(String json) {
+    private String extractTranscriptionFromResponse(final String json) {
         try {
-            JsonNode root = objectMapper.readTree(json);
-            JsonNode transcriptNode = root
-                    .path("results")
-                    .path("channels")
-                    .get(0)
-                    .path("alternatives")
-                    .get(0)
-                    .path("transcript");
-
+            val transcriptNode = objectMapper.readTree(json)
+                .path("results")
+                .path("channels")
+                .get(0)
+                .path("alternatives")
+                .get(0)
+                .path("transcript");
             return transcriptNode.asText();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (JsonProcessingException thrown) {
+            throw new RuntimeException(thrown);
         }
     }
 

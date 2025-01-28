@@ -9,24 +9,26 @@ import org.springframework.web.client.RestClient;
 @Configuration
 public class RestClientConfig {
     @Value("${api.deepgram.url}")
-    private String deepgramApiUrl;
+    String deepgramApiUrl;
+
     @Value("${api.telegram.url}")
-    private String telegramApiUrl;
+    String telegramApiUrl;
+
     @Value("${api.deepgram.token}")
-    private String deepgramToken;
+    String deepgramToken;
 
     @Bean
     public RestClient deepgramApi() {
         return RestClient.builder()
-                .baseUrl(deepgramApiUrl)
-                .defaultHeader(HttpHeaders.AUTHORIZATION, "Token " + deepgramToken)
-                .build();
+            .baseUrl(deepgramApiUrl)
+            .defaultHeader(HttpHeaders.AUTHORIZATION, "Token " + deepgramToken)
+            .build();
     }
 
     @Bean
     public RestClient telegramApi() {
         return RestClient.builder()
-                .baseUrl(telegramApiUrl)
-                .build();
+            .baseUrl(telegramApiUrl)
+            .build();
     }
 }
