@@ -19,8 +19,7 @@ public class TelegramConfig {
         val botUsername = bot.getBotUsername();
         log.info("Инициализация бота '{}'", botUsername);
         try {
-            val telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            val botSession = telegramBotsApi.registerBot(bot);
+            val botSession = new TelegramBotsApi(DefaultBotSession.class).registerBot(bot);
             log.info("Бот '{}' готов", botUsername);
             return botSession;
         } catch (TelegramApiException thrown) {

@@ -50,8 +50,7 @@ public class Speech2TextBot extends TelegramLongPollingBot {
         val getFile = new GetFile();
         getFile.setFileId(voice.getFileId());
         try {
-            val chatFilePath = execute(getFile).getFilePath();
-            val file = downloadFile(chatFilePath);
+            val file = downloadFile(execute(getFile).getFilePath());
             file.deleteOnExit();
             return file.toPath();
         } catch (TelegramApiException thrown) {
