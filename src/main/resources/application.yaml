@@ -12,3 +12,6 @@ api:
     token: ${DEEPGRAM_TOKEN}
   telegram:
     url: https://api.telegram.org
+logging:
+  level:
+    giezz.speech2texttgbot: DEBUG
