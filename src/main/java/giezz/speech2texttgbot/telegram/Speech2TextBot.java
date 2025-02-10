@@ -1,12 +1,15 @@
 package giezz.speech2texttgbot.telegram;
 
-import giezz.speech2texttgbot.api.DeepgramService;
+import giezz.speech2texttgbot.config.properties.TelegramBotConfigProperties;
+import giezz.speech2texttgbot.deepgram.service.DeepgramService;
+import giezz.speech2texttgbot.exception.UncheckedTelegramApiException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.facilities.filedownloader.DownloadFileException;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -20,17 +23,17 @@ import java.nio.file.Path;
 @FieldDefaults(makeFinal = true)
 @Slf4j
 public class Speech2TextBot extends TelegramLongPollingBot {
-    BotEnvironments botEnvironments;
+    TelegramBotConfigProperties telegramConfig;
     DeepgramService deepgramService;
 
     @Override
     public String getBotUsername() {
-        return botEnvironments.getBotUsername();
+        return telegramConfig.getUsername();
     }
 
     @Override
     public String getBotToken() {
-        return botEnvironments.getBotToken();
+        return telegramConfig.getToken();
     }
 
     @Override
@@ -54,7 +57,7 @@ public class Speech2TextBot extends TelegramLongPollingBot {
             file.deleteOnExit();
             return file.toPath();
         } catch (TelegramApiException thrown) {
-            throw new RuntimeException(thrown);
+            throw new UncheckedTelegramApiException("Ошибка при скачивании файла", thrown);
         }
     }
 
@@ -66,8 +69,7 @@ public class Speech2TextBot extends TelegramLongPollingBot {
         try {
             execute(sm);
         } catch (TelegramApiException thrown) {
-            throw new RuntimeException(thrown);
+            throw new UncheckedTelegramApiException("Ошибка при отправки сообщения", thrown);
         }
     }
-
 }

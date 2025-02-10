@@ -1,11 +1,12 @@
-package giezz.speech2texttgbot.api;
+package giezz.speech2texttgbot.deepgram.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import giezz.speech2texttgbot.deepgram.client.DeepgramClient;
+import giezz.speech2texttgbot.exception.ExtractTranscriptionException;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
@@ -29,17 +30,16 @@ public class DeepgramService {
 
     private String extractTranscriptionFromResponse(final String json) {
         try {
-            val transcriptNode = objectMapper.readTree(json)
+            return objectMapper.readTree(json)
                 .path("results")
                 .path("channels")
                 .get(0)
                 .path("alternatives")
                 .get(0)
-                .path("transcript");
-            return transcriptNode.asText();
+                .path("transcript")
+                .asText();
         } catch (JsonProcessingException thrown) {
-            throw new RuntimeException(thrown);
+            throw new ExtractTranscriptionException("Ошибка при извлечении транскрипции", thrown);
         }
     }
-
 }

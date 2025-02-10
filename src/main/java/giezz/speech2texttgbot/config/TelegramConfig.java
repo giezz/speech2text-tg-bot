@@ -14,8 +14,9 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @Configuration
 @Slf4j
 public class TelegramConfig {
-    @Bean
-    public BotSession speech2TextBotSession(final Speech2TextBot bot) {
+
+    @Bean("speech2TextBotSession")
+    public BotSession createSpeech2TextBotSession(final Speech2TextBot bot) {
         val botUsername = bot.getBotUsername();
         log.info("Инициализация бота '{}'", botUsername);
         try {
@@ -26,5 +27,4 @@ public class TelegramConfig {
             throw new BeanCreationException("Ошибка при инициализации бота", thrown);
         }
     }
-
 }

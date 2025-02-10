@@ -5,11 +5,14 @@ telegram:
   bot:
     username: Speech To Text
     token: ${TG_BOT_TOKEN}
-
 api:
   deepgram:
     url: https://api.deepgram.com/v1/listen
     token: ${DEEPGRAM_TOKEN}
+    query-params:
+      model: nova-2
+      smart_format: true
+      detect_language: true
   telegram:
     url: https://api.telegram.org
 logging:
